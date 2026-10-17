@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Radiant Hospital Management System - Technical Whitepaper & Deployment Guide</title>
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #1e293b;
+    background: #ffffff;
+    line-height: 1.4;
+    font-size: 11.5px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    page-break-after: always;
+    min-height: 275mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+  .page:last-child {
+    page-break-after: avoid;
+  }
+
+  /* Header Branding */
+  .doc-header {
+    border-bottom: 2px solid #0284c7;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .brand-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .brand-sub {
+    font-size: 11.5px;
+    color: #0284c7;
+    font-weight: 600;
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .doc-meta {
+    text-align: right;
+    font-size: 10px;
+    color: #64748b;
+    line-height: 1.35;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2.5px 7px;
+    border-radius: 4px;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .badge-teal { background: #ccfbf1; color: #0f766e; }
+  .badge-blue { background: #e0f2fe; color: #0369a1; }
+  .badge-slate { background: #f1f5f9; color: #334155; }
+  .badge-emerald { background: #dcfce7; color: #15803d; }
+
+  /* Callout Banner */
+  .callout-banner {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-left: 4px solid #0284c7;
+    padding: 9px 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    font-size: 11.5px;
+    line-height: 1.45;
+  }
+  .callout-banner strong {
+    color: #0f172a;
+  }
+
+  /* Typography */
+  .section-heading {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 3px;
+    margin-top: 10px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .section-heading span.num {
+    background: #0284c7;
+    color: #ffffff;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    font-size: 10.5px;
+  }
+  th {
+    background: #f1f5f9;
+    color: #0f172a;
+    text-align: left;
+    padding: 5px 8px;
+    font-weight: 700;
+    border: 1px solid #cbd5e1;
+    font-size: 10.5px;
+  }
+  td {
+    padding: 5px 8px;
+    border: 1px solid #e2e8f0;
+    color: #334155;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td {
+    background: #f8fafc;
+  }
+
+  /* Grid Layouts */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .grid-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  /* Cards */
+  .card {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 8px 10px;
+  }
+  .card-highlight {
+    background: #f0fdf4;
+    border-color: #86efac;
+  }
+  .card-primary {
+    background: #f0f9ff;
+    border-color: #7dd3fc;
+  }
+  .card-header-sm {
+    font-size: 11px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-body-sm {
+    font-size: 10px;
+    color: #475569;
+    line-height: 1.35;
+  }
+
+  /* Vector Diagram Box */
+  .diagram-container {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .diagram-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 8px;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* Step Flow */
+  .step-flow {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .step-box {
+    flex: 1;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-top: 3px solid #0284c7;
+    border-radius: 4px;
+    padding: 7px 8px;
+  }
+  .step-num {
+    font-size: 9.5px;
+    font-weight: 800;
+    color: #0284c7;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .step-title {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 3px;
+  }
+  .step-desc {
+    font-size: 9.5px;
+    color: #475569;
+    line-height: 1.3;
+  }
+
+  /* FAQ Accordion Item Style */
+  .faq-item {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 7px 10px;
+    margin-bottom: 6px;
+  }
+  .faq-q {
+    font-size: 11px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .faq-q::before {
+    content: "Q:";
+    color: #0284c7;
+    font-weight: 800;
+  }
+  .faq-a {
+    font-size: 10.5px;
+    color: #334155;
+    line-height: 1.35;
+    padding-left: 18px;
+  }
+
+  /* Footer */
+  .doc-footer {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 6px;
+    font-size: 9px;
+    color: #94a3b8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- ========================================================================= -->
+<!-- PAGE 1: EXECUTIVE PROPOSAL, TECH ARCHITECTURE & LAN TOPOLOGY              -->
+<!-- ========================================================================= -->
+<div class="page">
+  <div>
+    <!-- Document Header -->
+    <div class="doc-header">
+      <div>
+        <div class="brand-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+          Radiant Hospital Management System (HMS)
+        </div>
+        <div class="brand-sub">Enterprise On-Premise Software &bull; Technical Specification Document</div>
+      </div>
+      <div class="doc-meta">
+        <div><strong>Deployment Model:</strong> 100% Local LAN (Air-Gapped)</div>
+        <div><strong>Target Environment:</strong> Hospital Server (Windows 10/11/Server)</div>
+        <div><strong>Document Release:</strong> v1.0.0 &bull; Production Certified</div>
+      </div>
+    </div>
+
+    <!-- Executive Value Callout -->
+    <div class="callout-banner">
+      <strong>Core Architectural Principle:</strong> Radiant HMS is an <strong>independent, on-premise healthcare platform</strong> deployed exclusively inside the hospital facility. It functions <strong>100% offline</strong> without reliance on external internet connections, cloud vendors, or recurring hosting subscriptions. All patient clinical records, diagnostic files, and financial ledgers remain strictly confidential within the hospital's physical walls.
+    </div>
+
+    <!-- Key Strategic Pillars -->
+    <div class="grid-4">
+      <div class="card card-primary">
+        <div class="card-header-sm">
+          <span>Zero Internet Dependency</span>
+          <span class="badge badge-blue">Offline</span>
+        </div>
+        <div class="card-body-sm">Uninterrupted 24/7 hospital workflow during telecom disruptions or internet outages.</div>
+      </div>
+      <div class="card card-highlight">
+        <div class="card-header-sm">
+          <span>Complete Data Sovereignty</span>
+          <span class="badge badge-emerald">Private</span>
+        </div>
+        <div class="card-body-sm">Zero cloud fees. Full compliance with medical data localization and privacy mandates.</div>
+      </div>
+      <div class="card">
+        <div class="card-header-sm">
+          <span>Zero Client Installs</span>
+          <span class="badge badge-teal">Web Browser</span>
+        </div>
+        <div class="card-body-sm">Doctors, nurses, and billing staff access via standard Chrome or Edge browsers.</div>
+      </div>
+      <div class="card">
+        <div class="card-header-sm">
+          <span>Disaster Resilience</span>
+          <span class="badge badge-slate">Automated</span>
+        </div>
+        <div class="card-body-sm">Nightly automated database backups with 10-minute full system disaster recovery.</div>
+      </div>
+    </div>
+
+    <!-- Section 1: Technology Stack -->
+    <div class="section-heading">
+      <span class="num">1</span> Technology Stack & Engineering Rationale
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 22%;">Software Layer</th>
+          <th style="width: 28%;">Technology & Version</th>
+          <th>Clinical & Operational Benefit to the Hospital</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Frontend Client UI</strong></td>
+          <td>React 18 + TypeScript + Tailwind CSS</td>
+          <td>Ultra-fast, responsive single-page application. Zero desktop installations. Built-in pixel-perfect print formatting for invoices, prescriptions, and lab reports.</td>
+        </tr>
+        <tr>
+          <td><strong>Application Server</strong></td>
+          <td>Node.js LTS (v20+) + Express REST API</td>
+          <td>High-throughput, event-driven engine capable of handling hundreds of concurrent hospital staff requests with sub-10ms response times.</td>
+        </tr>
+        <tr>
+          <td><strong>Database Engine</strong></td>
+          <td>PostgreSQL 18 + Prisma ORM</td>
+          <td>Enterprise relational engine providing strict ACID transactional compliance, referential integrity, and automated schema migrations.</td>
+        </tr>
+        <tr>
+          <td><strong>Security & Auth</strong></td>
+          <td>bcrypt (12 rounds) + JWT Sessions</td>
+          <td>Role-Based Access Control (10 granular roles), automated session expiration, brute-force rate limiting, and immutable audit logs.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Section 2: Hospital LAN Network Schematic (Vector Graphics) -->
+    <div class="section-heading">
+      <span class="num">2</span> Hospital Local Area Network (LAN) Physical Topology
+    </div>
+    <div class="diagram-container">
+      <div class="diagram-title">
+        <span>Department Workstation Connectivity (Zero External Internet Exposure)</span>
+        <span class="badge badge-teal">Local Subnet: 192.168.1.0/24</span>
+      </div>
+      <svg width="100%" height="150" viewBox="0 0 740 150" style="background: #ffffff; border-radius: 4px; border: 1px solid #e2e8f0;">
+        <!-- Defs for arrows -->
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 8 5 L 0 9 z" fill="#0284c7" />
+          </marker>
+        </defs>
+
+        <!-- Department Terminals -->
+        <g transform="translate(15, 12)">
+          <!-- Reception -->
+          <rect x="0" y="0" width="130" height="26" rx="4" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2"/>
+          <text x="65" y="17" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">Reception & Intake</text>
+          
+          <!-- Doctor OPD -->
+          <rect x="0" y="32" width="130" height="26" rx="4" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2"/>
+          <text x="65" y="49" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">OPD Doctor Clinics</text>
+
+          <!-- Nursing IPD -->
+          <rect x="0" y="64" width="130" height="26" rx="4" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2"/>
+          <text x="65" y="81" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">IPD Nursing Stations</text>
+
+          <!-- Billing & Cashier -->
+          <rect x="0" y="96" width="130" height="26" rx="4" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2"/>
+          <text x="65" y="113" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">Billing & Cashier</text>
+        </g>
+
+        <!-- Connecting Lines to Switch -->
+        <path d="M 145 25 L 230 65" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="3,3" marker-end="url(#arrow)"/>
+        <path d="M 145 45 L 230 68" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="3,3" marker-end="url(#arrow)"/>
+        <path d="M 145 77 L 230 73" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="3,3" marker-end="url(#arrow)"/>
+        <path d="M 145 109 L 230 77" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="3,3" marker-end="url(#arrow)"/>
+
+        <!-- Hospital LAN Core Switch / Router -->
+        <g transform="translate(235, 38)">
+          <rect x="0" y="0" width="130" height="65" rx="6" fill="#0f172a" stroke="#0284c7" stroke-width="2"/>
+          <text x="65" y="24" font-size="10.5" font-weight="bold" fill="#38bdf8" text-anchor="middle">HOSPITAL LAN</text>
+          <text x="65" y="38" font-size="9" fill="#94a3b8" text-anchor="middle">Ethernet Switch / Wi-Fi</text>
+          <text x="65" y="52" font-size="8.5" fill="#22c55e" text-anchor="middle">● Internal Subnet Only</text>
+        </g>
+
+        <!-- Connection to Server PC -->
+        <path d="M 365 70 L 440 70" stroke="#0284c7" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="402" y="63" font-size="8.5" font-weight="bold" fill="#0369a1" text-anchor="middle">Port 4000</text>
+
+        <!-- Server PC Box -->
+        <g transform="translate(445, 12)">
+          <rect x="0" y="0" width="280" height="120" rx="6" fill="#f0f9ff" stroke="#0284c7" stroke-width="1.5"/>
+          <rect x="0" y="0" width="280" height="24" rx="6" fill="#0284c7"/>
+          <text x="140" y="16" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">HOSPITAL ON-PREMISE SERVER PC</text>
+
+          <!-- Inside Server: App Server -->
+          <rect x="12" y="32" width="256" height="34" rx="4" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="140" y="46" font-size="9.5" font-weight="bold" fill="#0f172a" text-anchor="middle">Radiant HMS Unified Server (Port 4000)</text>
+          <text x="140" y="58" font-size="8.5" fill="#64748b" text-anchor="middle">Serves React Web Portal + REST API simultaneously</text>
+
+          <!-- Inside Server: Local PostgreSQL -->
+          <rect x="12" y="74" width="256" height="34" rx="4" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="140" y="88" font-size="9.5" font-weight="bold" fill="#0f172a" text-anchor="middle">Local PostgreSQL 18 Database (Port 5432)</text>
+          <text x="140" y="100" font-size="8.5" fill="#15803d" text-anchor="middle">Bound to Localhost 127.0.0.1 (Isolated from LAN)</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Page Footer -->
+  <div class="doc-footer">
+    <span>Radiant Hospital Management System &bull; Technical Overview & Architecture</span>
+    <span>Page 1 of 3</span>
+  </div>
+</div>
+
+
+<!-- ========================================================================= -->
+<!-- PAGE 2: CLINICAL MODULES, RBAC SECURITY & DISTRIBUTION ARCHITECTURE       -->
+<!-- ========================================================================= -->
+<div class="page">
+  <div>
+    <!-- Document Header -->
+    <div class="doc-header">
+      <div>
+        <div class="brand-title">Modular Functional Capabilities & Security Governance</div>
+        <div class="brand-sub">Clinical Workflows, Access Control & Distribution Pipeline</div>
+      </div>
+      <div class="doc-meta">
+        <div><strong>Security Standard:</strong> Role-Based Access Control (RBAC)</div>
+        <div><strong>Architecture:</strong> Single-Port Embedded Distribution</div>
+      </div>
+    </div>
+
+    <!-- Section 3: Clinical Modules Overview -->
+    <div class="section-heading">
+      <span class="num">3</span> Pre-Configured Clinical & Administrative Modules
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-header-sm">
+          <span>Patient Management</span>
+          <span class="badge badge-blue">EMR</span>
+        </div>
+        <div class="card-body-sm">Automated Medical Record Number (MRN) generation, duplicate patient detection and merging, complete demographic profiles, and printable registration cards.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header-sm">
+          <span>Appointment Scheduler</span>
+          <span class="badge badge-teal">Queue</span>
+        </div>
+        <div class="card-body-sm">Conflict-free doctor consultation booking, availability rosters, multi-department outpatient queues, and printable patient appointment slips.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header-sm">
+          <span>Outpatient Department</span>
+          <span class="badge badge-emerald">OPD</span>
+        </div>
+        <div class="card-body-sm">Physician consultation notes, vital signs logging (BP, pulse, temp, weight), ICD diagnosis recording, and electronic Rx prescription builder.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header-sm">
+          <span>Inpatient Admission</span>
+          <span class="badge badge-blue">IPD</span>
+        </div>
+        <div class="card-body-sm">Ward and bed allocation matrix, real-time bed occupancy tracking, inter-ward patient transfers, clinical treatment plans, and discharge summaries.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header-sm">
+          <span>Billing & Cashier</span>
+          <span class="badge badge-teal">Finance</span>
+        </div>
+        <div class="card-body-sm">Service catalog, dynamic tax/GST calculation, multi-mode payment reconciliation (Cash, UPI, Card, Net Banking), and audited tax invoices.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header-sm">
+          <span>Pharmacy & Lab</span>
+          <span class="badge badge-slate">Diagnostics</span>
+        </div>
+        <div class="card-body-sm">Batch tracking with expiry alerts, FIFO drug dispensing, pathology test catalog, barcode sample tracking, and clinician-verified lab reports.</div>
+      </div>
+    </div>
+
+    <!-- Section 4: Security & RBAC Governance Matrix -->
+    <div class="section-heading">
+      <span class="num">4</span> Role-Based Access Control (RBAC) Governance Matrix
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 20%;">Staff Role</th>
+          <th style="width: 16%;">Patient Records</th>
+          <th style="width: 16%;">Appointments</th>
+          <th style="width: 16%;">Clinical (OPD/IPD)</th>
+          <th style="width: 16%;">Billing & Cashier</th>
+          <th>Pharmacy & Lab</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Hospital Director / Super Admin</strong></td>
+          <td>Full Control</td>
+          <td>Full Control</td>
+          <td>Full Access</td>
+          <td>Full Control</td>
+          <td>Full Control</td>
+        </tr>
+        <tr>
+          <td><strong>Medical Doctor / Specialist</strong></td>
+          <td>View / History</td>
+          <td>View / Schedule</td>
+          <td>Create / Edit Notes</td>
+          <td>View Only</td>
+          <td>Order Tests / Prescribe</td>
+        </tr>
+        <tr>
+          <td><strong>Nursing Staff</strong></td>
+          <td>View / Update Vitals</td>
+          <td>View Daily Queue</td>
+          <td>Bed Care / Vitals</td>
+          <td>No Access</td>
+          <td>Sample Collection</td>
+        </tr>
+        <tr>
+          <td><strong>Reception / Front Desk</strong></td>
+          <td>Intake / Register</td>
+          <td>Book / Reschedule</td>
+          <td>No Access</td>
+          <td>No Access</td>
+          <td>No Access</td>
+        </tr>
+        <tr>
+          <td><strong>Billing & Accounts Officer</strong></td>
+          <td>View Basic Info</td>
+          <td>No Access</td>
+          <td>No Access</td>
+          <td>Generate & Settle</td>
+          <td>View Billed Items</td>
+        </tr>
+        <tr>
+          <td><strong>Pharmacist / Lab Technologist</strong></td>
+          <td>View Patient MRN</td>
+          <td>No Access</td>
+          <td>No Access</td>
+          <td>Dispense / Invoice</td>
+          <td>Full Department Access</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Section 5: Packaging & Single-Port Architecture -->
+    <div class="section-heading">
+      <span class="num">5</span> Single-Port Embedded Distribution Architecture
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header-sm">
+          <span>The Distribution Package</span>
+          <span class="badge badge-teal">radiant-hms-v1.0.0.zip</span>
+        </div>
+        <div class="card-body-sm">
+          The application is supplied as a self-contained, pre-compiled ZIP archive. It contains:
+          <ul style="margin-left: 14px; margin-top: 4px;">
+            <li><strong>Frontend Pre-compiled Assets:</strong> Optimized static bundle in <code>frontend/dist/</code>.</li>
+            <li><strong>Backend Compiled Runtime:</strong> Express engine in <code>backend/dist/</code>.</li>
+            <li><strong>1-Click Batch Utilities:</strong> Installation, launch, firewall, and backup scripts.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header-sm">
+          <span>Single-Port (Port 4000) Advantage</span>
+          <span class="badge badge-blue">Zero Maintenance</span>
+        </div>
+        <div class="card-body-sm">
+          Unlike legacy systems requiring complex Apache or IIS configurations:
+          <ul style="margin-left: 14px; margin-top: 4px;">
+            <li><strong>One Network Port:</strong> Node.js serves both the web interface and REST APIs on Port 4000.</li>
+            <li><strong>Zero Workstation Setup:</strong> Works immediately in any browser via <code>http://[Server-IP]:4000</code>.</li>
+            <li><strong>Minimal Attack Surface:</strong> Only Port 4000 is open on the hospital server firewall.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Footer -->
+  <div class="doc-footer">
+    <span>Radiant Hospital Management System &bull; Technical Overview & Architecture</span>
+    <span>Page 2 of 3</span>
+  </div>
+</div>
+
+
+<!-- ========================================================================= -->
+<!-- PAGE 3: INSTALLATION PROTOCOL, BACKUP POLICY & IT FAQ                     -->
+<!-- ========================================================================= -->
+<div class="page">
+  <div>
+    <!-- Document Header -->
+    <div class="doc-header">
+      <div>
+        <div class="brand-title">Deployment Protocol & Disaster Recovery Specification</div>
+        <div class="brand-sub">Installation Steps, Automated Backups & Technical FAQ</div>
+      </div>
+      <div class="doc-meta">
+        <div><strong>Deployment Time:</strong> Under 15 Minutes</div>
+        <div><strong>Recovery Objective:</strong> RTO &lt; 15 min &bull; RPO &lt; 24 hrs</div>
+      </div>
+    </div>
+
+    <!-- Section 6: Hardware Prerequisites -->
+    <div class="section-heading">
+      <span class="num">6</span> Server Hardware Specifications & Prerequisites
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 25%;">Hardware / Environment</th>
+          <th style="width: 35%;">Minimum Specification (Up to 50 Beds)</th>
+          <th>Recommended Enterprise (100+ Beds / Concurrent Users)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Host Computer (Server)</strong></td>
+          <td>Standard PC: Intel Core i3 / 8 GB RAM / 256 GB SSD</td>
+          <td>Dedicated PC or Tower Server: Intel Core i5/i7 / 16 GB RAM / 512 GB NVMe SSD</td>
+        </tr>
+        <tr>
+          <td><strong>Operating System</strong></td>
+          <td>Windows 10 Pro / Windows 11 Pro (64-bit)</td>
+          <td>Windows Server 2019 / 2022 (64-bit) or Windows 11 Pro</td>
+        </tr>
+        <tr>
+          <td><strong>Power Resilience</strong></td>
+          <td>600 VA UPS (Uninterruptible Power Supply)</td>
+          <td>1 kVA - 2 kVA Online UPS with power monitoring</td>
+        </tr>
+        <tr>
+          <td><strong>Software Dependencies</strong></td>
+          <td colspan="2">1. <strong>Node.js LTS (v20+)</strong> (Free installer from nodejs.org) &nbsp;&bull;&nbsp; 2. <strong>PostgreSQL 18</strong> (Free installer from postgresql.org)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Section 7: 3-Step Windows Deployment Protocol -->
+    <div class="section-heading">
+      <span class="num">7</span> Three-Step Automated Windows Deployment Protocol
+    </div>
+    <div class="step-flow">
+      <div class="step-box">
+        <div class="step-num">Step 1</div>
+        <div class="step-title">Extract Archive</div>
+        <div class="step-desc">Extract <code>radiant-hms-v1.0.0.zip</code> directly into <code>C:\RadiantHMS\</code> on the designated server PC.</div>
+      </div>
+      <div class="step-box">
+        <div class="step-num">Step 2</div>
+        <div class="step-title">1-Click Initialization</div>
+        <div class="step-desc">Right-click <code>scripts\install-windows.bat</code> &rarr; <em>Run as Administrator</em>. Automatically initializes all 32 relational tables.</div>
+      </div>
+      <div class="step-box">
+        <div class="step-num">Step 3</div>
+        <div class="step-title">Firewall & Launch</div>
+        <div class="step-desc">Run <code>setup-firewall.bat</code> once, then double-click <code>start-hms.bat</code>. System launches and displays the Setup Wizard at <code>localhost:4000</code>.</div>
+      </div>
+    </div>
+
+    <!-- Section 8: Backup & Disaster Recovery Schedule -->
+    <div class="section-heading">
+      <span class="num">8</span> Automated Backup & 10-Minute Disaster Recovery Policy
+    </div>
+    <div class="grid-2">
+      <div class="card card-primary">
+        <div class="card-header-sm">
+          <span>Automated Nightly Backups (2:00 AM)</span>
+          <span class="badge badge-blue">Scheduled</span>
+        </div>
+        <div class="card-body-sm">
+          • Windows Task Scheduler runs <code>scripts\backup-db.bat</code> every night automatically.<br>
+          • Creates a timestamped, compressed <code>.sql</code> archive in <code>C:\RadiantHMS\backups\</code>.<br>
+          • Built-in 30-day retention automatically removes obsolete files to prevent disk overflow.<br>
+          • <strong>Best Practice:</strong> Hospital IT attaches a secondary external USB drive for weekly offsite mirroring.
+        </div>
+      </div>
+
+      <div class="card card-highlight">
+        <div class="card-header-sm">
+          <span>10-Minute Emergency System Recovery</span>
+          <span class="badge badge-emerald">Disaster Ready</span>
+        </div>
+        <div class="card-body-sm">
+          • If the server PC ever experiences total hardware failure:<br>
+          • Copy the latest backup snapshot to any spare Windows laptop or PC.<br>
+          • Run <code>scripts\restore-db.bat</code>, specify the backup file, and type <code>RESTORE</code>.<br>
+          • All patient charts, active ward beds, invoices, and audit histories are restored with zero data corruption.
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 9: Frequently Asked Questions by Hospital IT & Management -->
+    <div class="section-heading">
+      <span class="num">9</span> Hospital IT & Management Frequently Asked Questions
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What happens if our hospital's internet connection goes down?</div>
+      <div class="faq-a">Operations continue completely uninterrupted. Radiant HMS does not require external cloud servers, third-party CDNs, or internet access to function. All records, billing, and registrations occur over the hospital's local network.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Do we need to install software on doctors' laptops, reception desks, or tablets?</div>
+      <div class="faq-a">No software is installed on client workstations. Staff simply open their web browser (Google Chrome, Microsoft Edge, Safari) and navigate to the hospital server's local address (e.g., <code>http://192.168.1.11:4000</code>).</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How does the system ensure patient data privacy and prevent leaks?</div>
+      <div class="faq-a">The database is bound exclusively to the server's internal localhost and is never directly accessible over the network. Passwords use 12-round salted hashing, permissions are strictly checked by server middleware, and an immutable audit log records all sensitive modifications.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can we connect mobile apps or medical diagnostic machines in the future?</div>
+      <div class="faq-a">Yes. Radiant HMS is built around standard RESTful JSON APIs and Swagger documentation. Mobile applications (iOS/Android) and laboratory equipment can integrate directly with existing endpoints without changing the backend.</div>
+    </div>
+  </div>
+
+  <!-- Sign-off Block & Page Footer -->
+  <div>
+    <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 4px; padding: 6px 10px; margin-top: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 9.5px; color: #475569;">
+      <div><strong>Certified Release:</strong> Radiant HMS Production v1.0.0 &bull; 100% On-Premise Verified</div>
+      <div><strong>Technical Support & Warranty:</strong> Full Installation Assistance, Schema Migrations & Documentation Included</div>
+    </div>
+    <div class="doc-footer" style="margin-top: 6px;">
+      <span>Radiant Hospital Management System &bull; Technical Overview & Architecture</span>
+      <span>Page 3 of 3</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

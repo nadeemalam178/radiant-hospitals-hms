@@ -1,0 +1,27 @@
+{
+  "name": "radiant-hospitals-hms",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Production-Ready On-Premise Hospital Management System (HMS)",
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "build": "npm run build:frontend && npm run build:backend",
+    "start": "cd backend && npm start",
+    "test": "cd backend && npm test",
+    "prisma:generate": "cd backend && npm run prisma:generate",
+    "prisma:push": "cd backend && npm run prisma:push"
+  },
+  "keywords": [
+    "hospital-management-system",
+    "hms",
+    "emr",
+    "ehr",
+    "on-premise",
+    "offline-first",
+    "healthcare"
+  ],
+  "author": "Radiant Health Solutions"
+}
