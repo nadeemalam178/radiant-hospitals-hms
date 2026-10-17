@@ -50,6 +50,23 @@ export interface AbhaCareContext {
   linkedAt: string
 }
 
+export interface AbhaProfile {
+  abhaNumber: string
+  abhaAddress: string
+  fullName: string
+  gender: string
+  dateOfBirth: string
+  phone?: string
+  aadhaarMasked?: string
+  address?: string
+  district?: string
+  state?: string
+  pincode?: string
+  status: string
+  kycVerified: boolean
+  qrCodePayload?: string
+}
+
 export interface Patient {
   id: string
   mrn: string
@@ -69,30 +86,13 @@ export interface Patient {
   abhaAddress?: string
   abhaStatus?: 'VERIFIED' | 'PENDING' | 'NOT_LINKED'
   aadhaarMasked?: string
-  abhaDetails?: any
+  abhaDetails?: AbhaProfile | Record<string, unknown>
   careContexts?: AbhaCareContext[]
   _count?: {
     appointments: number
     encounters: number
     admissions: number
   }
-}
-
-export interface AbhaProfile {
-  abhaNumber: string
-  abhaAddress: string
-  fullName: string
-  gender: string
-  dateOfBirth: string
-  phone?: string
-  aadhaarMasked?: string
-  address?: string
-  district?: string
-  state?: string
-  pincode?: string
-  status: string
-  kycVerified: boolean
-  qrCodePayload?: string
 }
 
 export interface Doctor {
