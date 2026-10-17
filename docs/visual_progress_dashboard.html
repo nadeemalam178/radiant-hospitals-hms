@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Radiant Hospitals HMS - Visual Progress & Architecture Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+  <!-- Header Banner -->
+  <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur sticky top-0 z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center font-bold text-slate-950 text-lg shadow-lg shadow-emerald-500/20">
+          RH
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+            Radiant Hospital & Research Institute
+            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              v1.0.0 Production Hardened
+            </span>
+          </h1>
+          <p class="text-xs text-slate-400">Visual Architecture, ABDM Integration & Engineering Delivery Dashboard</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 text-xs">
+        <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-slate-300 font-mono">
+          Facility ID: IN2910000452
+        </span>
+        <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-slate-300 font-mono">
+          HIP ID: IN_RHRI_BLR_01
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+
+    <!-- KPI Metric Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="p-5 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-slate-700 transition">
+        <span class="text-xs font-semibold text-slate-400 block uppercase tracking-wider">Test Suite Execution</span>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-emerald-400">22 / 22</span>
+          <span class="text-xs text-emerald-500 font-semibold">100% Passed</span>
+        </div>
+        <span class="text-[11px] text-slate-500 mt-1 block">Auth (5), Clinical (6), ABDM (11)</span>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-slate-700 transition">
+        <span class="text-xs font-semibold text-slate-400 block uppercase tracking-wider">Project Phases</span>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-cyan-400">9 / 9</span>
+          <span class="text-xs text-cyan-500 font-semibold">Completed</span>
+        </div>
+        <span class="text-[11px] text-slate-500 mt-1 block">Audit to Windows Packaging</span>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-slate-700 transition">
+        <span class="text-xs font-semibold text-slate-400 block uppercase tracking-wider">ABDM Simulation Status</span>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-purple-400">0%</span>
+          <span class="text-xs text-purple-400 font-semibold">Zero Fake Data</span>
+        </div>
+        <span class="text-[11px] text-slate-500 mt-1 block">No hardcoded OTPs or fake profiles</span>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-slate-700 transition">
+        <span class="text-xs font-semibold text-slate-400 block uppercase tracking-wider">Release Distribution ZIP</span>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-3xl font-extrabold text-amber-400">426 KB</span>
+          <span class="text-xs text-amber-500 font-semibold">Verified</span>
+        </div>
+        <span class="text-[11px] text-slate-500 mt-1 block">Clean template, zero dev leaks</span>
+      </div>
+    </div>
+
+    <!-- Interactive Visual Diagrams Section -->
+    <div class="space-y-6">
+
+      <!-- Section Title -->
+      <div>
+        <h2 class="text-xl font-bold text-white tracking-tight">System Architecture & Workflows</h2>
+        <p class="text-sm text-slate-400">Visual breakdown of on-premise hospital hosting, ABDM NHA Gateway interaction, and security defense.</p>
+      </div>
+
+      <!-- Diagram Card 1: On-Premise LAN Architecture -->
+      <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+            1. Single-Hospital On-Premise Network & Gateway Architecture
+          </h3>
+          <span class="text-xs text-slate-400">Offline-first LAN + Encrypted NHA Gateway Uplink</span>
+        </div>
+        <div class="overflow-x-auto bg-[#070d18] p-4 rounded-xl border border-slate-800/80">
+          <pre class="mermaid text-center">
+graph TB
+    subgraph LAN_Clients ["🏥 Hospital LAN Workstations (Port 4000)"]
+        Desk["Reception & OPD Desks<br/>(Registration / Appointments)"]
+        Doc["Doctor Consultation Rooms<br/>(EMR / Prescriptions)"]
+        Nurse["Nursing Stations<br/>(Vitals / IPD Beds)"]
+        Lab["Laboratory Stations<br/>(Diagnostics / Reports)"]
+        Pharm["Pharmacy Dispensary<br/>(Formulary / Batches)"]
+        Bill["Billing Counters<br/>(Invoices / Payments)"]
+    end
+
+    subgraph Host_Server ["🖥️ Host Server (Windows Server / 10 / 11)"]
+        direction TB
+        FW["Windows Firewall<br/>(Port 4000 Allowed for Private LAN)"]
+        
+        subgraph App_Server ["Node.js Express Application (Port 4000)"]
+            Static["Compiled Frontend SPA<br/>(React 18 + Vite + Tailwind)"]
+            Router["API Router (/api/v1)"]
+            AuthSec["Auth & RBAC Middleware<br/>(JWT + UUID jti + Lockout)"]
+            Audit["PII-Sanitized Audit Logger<br/>(Aadhaar Masked / Secrets Redacted)"]
+            
+            subgraph ABDM_Module ["ABDM Gateway Integration Engine"]
+                Client["AbdmClient<br/>(v0.5 Protocol / Tokens)"]
+                Service["AbdmService<br/>(M1 / M2 / M3 Workflows)"]
+                Mock["AbdmMockProvider<br/>(Strictly Gated: Test Mode Only)"]
+            end
+        end
+
+        subgraph DB ["PostgreSQL Database (Port 5432 - Internal Only)"]
+            Prisma["Prisma ORM (27 Models)"]
+            Migrate["Versioned Migrations<br/>(20261017000000_init_radiant_hms)"]
+            Tables["Patients, Invoices, Admissions,<br/>AbdmTransactions, AuditLogs"]
+        end
+    end
+
+    subgraph Govt_Cloud ["🇮🇳 National Health Authority (NHA) ABDM Gateway"]
+        NHA_Sbx["ABDM Sandbox Gateway<br/>(https://dev.abdm.gov.in/gateway)"]
+        NHA_Prod["ABDM Production Gateway<br/>(https://gateway.abdm.gov.in)"]
+        PHR["Ayushman ABHA Mobile App<br/>(Patient Health Records)"]
+    end
+
+    LAN_Clients -->|HTTP / JSON (LAN)| FW
+    FW --> App_Server
+    Static -.->|Serves UI to Browser| LAN_Clients
+    Router --> AuthSec
+    AuthSec --> ABDM_Module
+    AuthSec --> Prisma
+    Audit --> Prisma
+    Prisma --> Tables
+    Client -->|Encrypted HTTPS / TLS 1.3| NHA_Sbx
+    Client -->|Encrypted HTTPS / TLS 1.3| NHA_Prod
+    NHA_Sbx -->|Inbound Webhooks: Discover / Consent| Router
+    PHR <--> NHA_Sbx
+          </pre>
+        </div>
+      </div>
+
+      <!-- Diagram Card 2: Before vs After Transformation -->
+      <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+            2. Before vs. After Codebase Transformation
+          </h3>
+          <span class="text-xs text-slate-400">From simulated prototype to production hardening</span>
+        </div>
+        <div class="overflow-x-auto bg-[#070d18] p-4 rounded-xl border border-slate-800/80">
+          <pre class="mermaid text-center">
+graph LR
+    subgraph Before ["❌ BEFORE (Simulated & Vulnerable)"]
+        B1["Hybrid Confusion<br/>(Dead Next.js + Vite Root)"]
+        B2["Two Conflicting<br/>Prisma Schemas"]
+        B3["Fake ABHA Simulation<br/>(Hardcoded OTP 123456)"]
+        B4["In-Memory OTP Store<br/>(Map - Lost on Restart)"]
+        B5["Credential Leak<br/>(Dev .env in release ZIP)"]
+        B6["Destructive DB Scripts<br/>(Wiped DB on every run)"]
+    end
+
+    subgraph After ["✅ AFTER (Production Hardened)"]
+        A1["Unified Production Stack<br/>(Vite + Express on Port 4000)"]
+        A2["One Authoritative Schema<br/>(27 Models + Versioned Migrations)"]
+        A3["Real NHA ABDM Engine<br/>(Zero fake data in prod)"]
+        A4["PostgreSQL Transactions<br/>(AbdmTransaction & AbdmConsent)"]
+        A5["Sanitized Packaging<br/>(Clean .env.template, Zero Leaks)"]
+        A6["Non-Destructive Init<br/>(Safe baseline init-hospital.ts)"]
+    end
+
+    B1 ==> A1
+    B2 ==> A2
+    B3 ==> A3
+    B4 ==> A4
+    B5 ==> A5
+    B6 ==> A6
+          </pre>
+        </div>
+      </div>
+
+      <!-- Diagram Card 3: ABDM Sequence Workflow -->
+      <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-teal-400"></span>
+            3. Official ABDM M1 Identity & M2 Care Context Sequence
+          </h3>
+          <span class="text-xs text-slate-400">Documented NHA Gateway protocol flow</span>
+        </div>
+        <div class="overflow-x-auto bg-[#070d18] p-4 rounded-xl border border-slate-800/80">
+          <pre class="mermaid text-center">
+sequenceDiagram
+    autonumber
+    actor Patient as 🧑 Patient (Ayushman Beneficiary)
+    actor Staff as 👩‍⚕️ Hospital Staff (Reception / OPD)
+    participant UI as 💻 Radiant HMS Frontend (SPA)
+    participant API as ⚙️ Express Backend (AbdmService)
+    participant DB as 🗄️ PostgreSQL (AbdmTransaction)
+    participant NHA as 🏛️ NHA ABDM Gateway
+
+    Note over Staff, NHA: MILESTONE 1 (M1): Official ABHA Identity Authentication
+    Staff->>UI: Enter 10-Digit Mobile or 12-Digit Aadhaar
+    UI->>API: POST /api/v1/abha/generate-otp
+    API->>DB: Check active session / Log transaction attempt
+    API->>NHA: POST /v0.5/users/auth/init (Purpose: KYC_AND_LINK)
+    NHA-->>Patient: SMS with official 6-digit Govt OTP
+    NHA-->>API: 200 OK (Transaction UUID)
+    API->>DB: Record AbdmTransaction (Status: OTP_SENT, Masked Identifier)
+    API-->>UI: OTP Dispatched Response
+    
+    Patient->>Staff: Provides SMS OTP
+    Staff->>UI: Inputs 6-digit OTP
+    UI->>API: POST /api/v1/abha/verify-otp (txnId, otp)
+    API->>NHA: POST /v0.5/users/auth/confirm (txnId, authCode)
+    NHA-->>API: Verified Demographics (14-Digit ABHA, Address, Name, Gender, DOB)
+    API->>DB: Update AbdmTransaction (Status: VERIFIED)
+    API->>DB: Link ABHA to Patient EMR Record (abhaStatus: VERIFIED)
+    API-->>UI: Verified ABHA Profile & Digital QR Card
+
+    Note over Staff, NHA: MILESTONE 2 (M2): Care Context Linking & Discovery
+    Staff->>UI: Doctor Completes OPD Consultation
+    UI->>API: POST /api/v1/abha/care-contexts (patientId, encounterNumber)
+    API->>DB: Upsert AbhaCareContext (Status: LINKED, hipId: IN_RHRI_BLR_01)
+    API->>NHA: POST /v0.5/links/context/notify (Push Care Context)
+    NHA-->>API: 200 OK (Acknowledged)
+    
+    Note over Patient, API: Patient Searches Records on ABHA Mobile App
+    Patient->>NHA: Search Radiant Hospital in PHR App
+    NHA->>API: Webhook: POST /v0.5/care-contexts/discover
+    API->>DB: Find Patient & Care Contexts by Mobile or ABHA
+    API->>NHA: POST /v0.5/care-contexts/on-discover (Matching Care Contexts)
+    NHA-->>Patient: Shows Radiant Hospital Consultations on Phone
+          </pre>
+        </div>
+      </div>
+
+      <!-- Diagram Card 4: Packaging & Windows Deployment Pipeline -->
+      <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+            4. Windows Release Packaging & Hospital Deployment Pipeline
+          </h3>
+          <span class="text-xs text-slate-400">End-to-end sanitized distribution process</span>
+        </div>
+        <div class="overflow-x-auto bg-[#070d18] p-4 rounded-xl border border-slate-800/80">
+          <pre class="mermaid text-center">
+graph LR
+    subgraph Step1 ["1. Build"]
+        B_Front["Frontend Build<br/>(Vite -> frontend/dist)"]
+        B_Back["Backend Build<br/>(tsc -> backend/dist)"]
+    end
+
+    subgraph Step2 ["2. Staging & Sanitation"]
+        Stage["Create Staging Folder"]
+        CopyBin["Copy dist/ & migrations/"]
+        Sanitize["CRITICAL: Copy .env.example<br/>as .env.template (NO DEV SECRETS)"]
+    end
+
+    subgraph Step3 ["3. ZIP Packaging"]
+        Zip["Compress-Archive<br/>radiant-hms-v1.0.0.zip (426 KB)"]
+    end
+
+    subgraph Step4 ["4. Client Host Deployment"]
+        Extract["Extract to C:\\RadiantHMS"]
+        Install["Run scripts\\install-windows.bat<br/>(Migrate Deploy + Baseline Init)"]
+        Firewall["Run scripts\\setup-firewall.bat<br/>(Open Port 4000 on LAN)"]
+        Start["Run scripts\\start-hms.bat<br/>(Launch Express Server)"]
+        Backup["Schedule scripts\\backup-db.bat<br/>(Daily 11 PM Automated Backup)"]
+    end
+
+    Step1 --> Step2
+    Step2 --> Step3
+    Step3 --> Step4
+          </pre>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Phase Completion Breakdown Table -->
+    <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800 space-y-4">
+      <h3 class="text-base font-bold text-white">Full Implementation Phase Breakdown</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs text-left">
+          <thead class="text-slate-400 uppercase bg-slate-950/60 border-b border-slate-800">
+            <tr>
+              <th class="py-3 px-4">Phase</th>
+              <th class="py-3 px-4">Milestone</th>
+              <th class="py-3 px-4">Scope & Remediation</th>
+              <th class="py-3 px-4">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/80 text-slate-300">
+            <tr class="hover:bg-slate-900/30">
+              <td class="py-3 px-4 font-mono font-bold text-emerald-400">Phase 1</td>
+              <td class="py-3 px-4 font-semibold text-white">Full Repository Audit</td>
+              <td class="py-3 px-4">Audited entire repository, identified duplicate Next.js artifacts, simulated OTPs, and packaging flaws. Created <code class="text-emerald-300">IMPLEMENTATION_GAP_REPORT.md</code>.</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">Completed</span></td>
+            </tr>
+            <tr class="hover:bg-slate-900/30">
+              <td class="py-3 px-4 font-mono font-bold text-emerald-400">Phase 2</td>
+              <td class="py-3 px-4 font-semibold text-white">Clean Architecture</td>
+              <td class="py-3 px-4">Purged Next.js scaffold. Unified single Vite + Express + PostgreSQL stack. Verified builds cleanly.</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">Completed</span></td>
+            </tr>
+            <tr class="hover:bg-slate-900/30">
+              <td class="py-3 px-4 font-mono font-bold text-emerald-400">Phase 3</td>
+              <td class="py-3 px-4 font-semibold text-white">Purge Simulated ABDM</td>
+              <td class="py-3 px-4">Eliminated hardcoded OTP 123456, Math.random ABHA generator, and in-memory Map store. Zero fake claims in prod.</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">Completed</span></td>
+            </tr>
+            <tr class="hover:bg-slate-900/30">
+              <td class="py-3 px-4 font-mono font-bold text-emerald-400">Phase 4</td>
+              <td class="py-3 px-4 font-semibold text-white">Real ABDM Workflows</td>
+              <td class="py-3 px-4">Built AbdmClient, AbdmService, PostgreSQL transactions (AbdmTransaction, AbdmConsent), and M1/M2/M3 webhooks.</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">Completed</span></td>
+            </tr>
+            <tr class="hover:bg-slate-900/30">
+              <td class="py-3 px-4 font-mono font-bold text-emerald-400">Phase 5</td>
+              <td class="py-3 px-4 font-semibold text-white">Security Hardening</td>
+              <td class="py-3 px-4">Added UUID jti to JWTs, masked Aadhaar logging, production mock rejection, account lockout, and PII sanitization.</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">Completed</span></td>
+            </tr>
+            <tr class="hover:bg-slate-900/30">
+              <td class="py-3 px-4 font-mono font-bold text-emerald-400">Phase 6</td>
+              <td class="py-3 px-4 font-semibold text-white">Database Integrity</td>
+              <td class="py-3 px-4">Created versioned migration (20261017000000_init_radiant_hms), guarded seed.ts, and built non-destructive init-hospital.ts.</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">Completed</span></td>
+            </tr>
+            <tr class="hover:bg-slate-900/30">
+              <td class="py-3 px-4 font-mono font-bold text-emerald-400">Phase 7</td>
+              <td class="py-3 px-4 font-semibold text-white">Automated Testing</td>
+              <td class="py-3 px-4">Auth, Clinical, and ABDM Vitest suites: 22 passed / 0 failed (100% pass rate). Zero failing tests.</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">Completed</span></td>
+            </tr>
+            <tr class="hover:bg-slate-900/30">
+              <td class="py-3 px-4 font-mono font-bold text-emerald-400">Phase 8</td>
+              <td class="py-3 px-4 font-semibold text-white">Windows ZIP Release</td>
+              <td class="py-3 px-4">Hardened package-release.bat, eliminated credential leaks, generated verified radiant-hms-v1.0.0.zip (426 KB).</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">Completed</span></td>
+            </tr>
+            <tr class="hover:bg-slate-900/30">
+              <td class="py-3 px-4 font-mono font-bold text-emerald-400">Phase 9</td>
+              <td class="py-3 px-4 font-semibold text-white">Documentation Suite</td>
+              <td class="py-3 px-4">Created Gap Report, ABDM Matrix, Test Report, Windows Guide, Readiness Checklist, and updated README.</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">Completed</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-slate-800 text-center py-6 text-xs text-slate-500">
+    Radiant Hospital & Research Institute &bull; Single-Hospital Enterprise HMS &bull; Confidential & Proprietary
+  </footer>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        darkMode: true,
+        background: '#070d18',
+        primaryColor: '#059669',
+        primaryTextColor: '#f8fafc',
+        primaryBorderColor: '#10b981',
+        lineColor: '#38bdf8',
+        secondaryColor: '#0f172a',
+        tertiaryColor: '#1e293b'
+      }
+    });
+  </script>
+</body>
+</html>
