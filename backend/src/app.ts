@@ -17,6 +17,7 @@ import { billingRoutes } from './routes/billing.routes'
 import { labRoutes } from './routes/lab.routes'
 import { pharmacyRoutes } from './routes/pharmacy.routes'
 import { reportRoutes } from './routes/report.routes'
+import { abhaRoutes } from './routes/abha.routes'
 import { prisma } from './config/db'
 
 export const app = express()
@@ -84,6 +85,7 @@ app.use('/api/v1/billing', billingRoutes)
 app.use('/api/v1/lab', labRoutes)
 app.use('/api/v1/pharmacy', pharmacyRoutes)
 app.use('/api/v1/reports', reportRoutes)
+app.use('/api/v1/abha', abhaRoutes)
 
 // Serve Production Frontend SPA directly from Express on LAN
 const frontendDistPath = path.resolve(__dirname, '../../frontend/dist')

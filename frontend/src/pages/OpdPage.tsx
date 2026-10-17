@@ -14,6 +14,7 @@ import {
   AlertCircle,
   Clock,
   HeartPulse,
+  ShieldCheck,
 } from 'lucide-react'
 
 export const OpdPage: React.FC = () => {
@@ -166,8 +167,13 @@ export const OpdPage: React.FC = () => {
                 </div>
 
                 <h3 className="font-bold text-white text-base">{enc.patient.fullName}</h3>
-                <div className="text-xs text-slate-400 mt-0.5 font-mono">
-                  {enc.patient.mrn} &bull; {enc.patient.gender}
+                <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400 mt-0.5 font-mono">
+                  <span>{enc.patient.mrn} &bull; {enc.patient.gender}</span>
+                  {enc.patient.abhaNumber && (
+                    <span className="inline-flex items-center gap-1 text-[11px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                      <ShieldCheck size={11} /> ABHA: {enc.patient.abhaNumber}
+                    </span>
+                  )}
                 </div>
 
                 <div className="mt-3 pt-3 border-t border-slate-800 text-xs text-slate-300">

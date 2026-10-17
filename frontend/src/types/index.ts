@@ -33,6 +33,21 @@ export interface HospitalSettings {
   appointmentPrefix: string
   labOrderPrefix: string
   taxPercentDefault: number
+  facilityId?: string
+  facilityName?: string
+  hipId?: string
+  abdmBridgeUrl?: string
+}
+
+export interface AbhaCareContext {
+  id: string
+  patientId: string
+  referenceNumber: string
+  display: string
+  careContextType: string
+  status: string
+  hipId?: string
+  linkedAt: string
 }
 
 export interface Patient {
@@ -50,11 +65,34 @@ export interface Patient {
   allergies?: string
   isArchived: boolean
   createdAt: string
+  abhaNumber?: string
+  abhaAddress?: string
+  abhaStatus?: 'VERIFIED' | 'PENDING' | 'NOT_LINKED'
+  aadhaarMasked?: string
+  abhaDetails?: any
+  careContexts?: AbhaCareContext[]
   _count?: {
     appointments: number
     encounters: number
     admissions: number
   }
+}
+
+export interface AbhaProfile {
+  abhaNumber: string
+  abhaAddress: string
+  fullName: string
+  gender: string
+  dateOfBirth: string
+  phone?: string
+  aadhaarMasked?: string
+  address?: string
+  district?: string
+  state?: string
+  pincode?: string
+  status: string
+  kycVerified: boolean
+  qrCodePayload?: string
 }
 
 export interface Doctor {

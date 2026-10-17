@@ -186,6 +186,45 @@ export const SettingsPage: React.FC = () => {
             </div>
           </div>
 
+          {/* ABDM / ABHA (Ayushman Bharat Digital Mission) Configuration */}
+          <div className="bg-[#0f172a] border border-emerald-500/30 rounded-2xl p-6 space-y-4">
+            <h2 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <Shield size={16} className="text-emerald-400" /> Ayushman Bharat Digital Mission (ABDM) Gateway
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div>
+                <label className="block font-semibold text-slate-300 mb-1">ABDM Health Facility Registry (HFR) ID</label>
+                <input
+                  type="text"
+                  value={formData.facilityId || 'IN2910000452'}
+                  onChange={e => setFormData({ ...formData, facilityId: e.target.value })}
+                  className="w-full px-3 py-2 bg-[#090f1d] border border-slate-700/80 rounded-xl text-white font-mono focus:border-emerald-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-300 mb-1">Health Information Provider (HIP) ID</label>
+                <input
+                  type="text"
+                  value={formData.hipId || 'IN_RHRI_BLR_01'}
+                  onChange={e => setFormData({ ...formData, hipId: e.target.value })}
+                  className="w-full px-3 py-2 bg-[#090f1d] border border-slate-700/80 rounded-xl text-white font-mono focus:border-emerald-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block font-semibold text-slate-300 mb-1">ABDM Gateway Bridge URL</label>
+                <input
+                  type="text"
+                  value={formData.abdmBridgeUrl || 'https://dev.abdm.gov.in/gateway/v0.5'}
+                  onChange={e => setFormData({ ...formData, abdmBridgeUrl: e.target.value })}
+                  className="w-full px-3 py-2 bg-[#090f1d] border border-slate-700/80 rounded-xl text-white font-mono text-xs focus:border-emerald-500 focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Local PostgreSQL Diagnostics Box */}
           <div className="bg-[#0f172a] border border-slate-800 rounded-2xl p-6 space-y-3">
             <h2 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">

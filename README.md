@@ -1,99 +1,91 @@
-# Radiant Hospitals - Hospital Management System (HMS)
+# Radiant Hospital & Research Institute - Hospital Management System (HMS)
 
-A production-grade, on-premise and cloud-ready **Hospital Management System (HMS)** designed for reliable, offline-first hospital clinical and administrative workflows.
+A production-grade, offline-first on-premise **Hospital Management System (HMS)** designed for single hospital operations with full **Ayushman Bharat Digital Mission (ABDM / ABHA)** integration.
 
 ---
 
-## 🏥 Modules & Features
+## 🏥 Modules & Capabilities
 
-- **Patient Management & MRN:** Automated generation of unique Medical Record Numbers, demographics, and medical history.
-- **Outpatient Department (OPD):** Doctor consultations, token queuing, vitals capture, and digital prescriptions.
-- **Inpatient Department (IPD):** Ward/bed allocation, daily doctor rounding logs, admission/discharge summaries.
-- **Billing & Invoicing:** Itemized patient billing, payments, discounts, insurance, and printable receipt generation.
-- **Pharmacy & Inventory:** Stock management, batch numbers, expiry tracking, and direct prescription dispensing.
-- **Laboratory (Pathology):** Diagnostic test orders, sample tracking, lab technician result entry, and PDF report generation.
-- **Security & RBAC:** Role-Based Access Control (Admin, Doctor, Nurse, Receptionist, Pharmacist, Lab Technician, Accountant) with JWT authentication and audit trails.
-- **Windows LAN Deployment:** Automated one-click batch scripts (`.bat`) for hospital host PC installation, firewall rules, automated backup, and restore routines.
+- **Single Hospital Core:** Dedicated to Radiant Hospital & Research Institute (`RHRI`), streamlined without multi-tenant overhead.
+- **ABDM / ABHA Integration (M1 & M2):**
+  - **Milestone 1 (M1):** 14-digit ABHA ID generation & OTP authentication (Aadhaar / Mobile), verification badges, and Digital ABHA Card generation with QR codes.
+  - **Milestone 2 (M2):** Hospital Information Provider (HIP) care context linking for OPD consultations, diagnostic lab reports, and inpatient discharge summaries.
+- **Patient Registry & EMR:** Automated MRN generation, demographics, vitals, drug allergy warnings, and duplicate patient record merging.
+- **Outpatient Department (OPD):** Doctor consultations, token queuing, vitals capture, and digital prescription generation.
+- **Inpatient Department (IPD):** Ward & bed allocation (General, ICU, Private Suites), doctor rounding notes, and admission/discharge workflows.
+- **Billing & Invoicing:** Itemized bills with patient MRN and ABHA IDs, cash/card/UPI payment recording, and printable tax receipts.
+- **Pharmacy & Stock:** 24/7 central dispensary inventory, batch numbers, expiry monitoring, and stock dispensing.
+- **Laboratory (Pathology):** Diagnostic test catalog, sample tracking, technician result entry, and reference range validation.
+- **Security & RBAC:** Role-Based Access Control with JWT authentication, audit trails, and rate limiting.
 
 ---
 
 ## 🏛️ Architecture Overview
 
-The system is engineered as a decoupled full-stack application:
-
 ```
-├── frontend/             # React + Vite + TypeScript + Tailwind CSS SPA
+├── frontend/             # React 18 + Vite + TypeScript + Tailwind CSS SPA
 ├── backend/              # Node.js + Express + TypeScript + Prisma ORM (PostgreSQL)
+│   ├── prisma/seed.ts    # Comprehensive database reset & realistic dummy data seeder
+│   └── tests/            # Automated Vitest test suite (Auth & ABHA endpoints)
 ├── scripts/              # Windows LAN deployment, backup, and service control scripts
-├── docs/                 # Complete architecture, technical specs, security, & user guide
-└── docker-compose.yml    # Containerized multi-service deployment
+└── docs/                 # Complete architecture, technical specs, security & user guides
 ```
-
-### Tech Stack
-- **Frontend:** React 18, Vite, TypeScript, Tailwind CSS, Lucide Icons
-- **Backend:** Node.js, Express.js, TypeScript, Prisma ORM, Winston Logger, Swagger / OpenAPI
-- **Database:** PostgreSQL (with automated `pg_dump` backups and health checks)
-- **Deployment:** Windows Server / Host PC on local network or Docker container
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start & Seed Setup
 
-### Prerequisites
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- [PostgreSQL](https://www.postgresql.org/) (v14 or higher)
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/nadeemalam178/radiant-hospitals-hms.git
-cd radiant-hospitals-hms
-```
-
-### 2. Backend Setup
+### 1. Database Setup & Seed
 ```bash
 cd backend
-cp .env.example .env
-# Edit .env with your PostgreSQL credentials
 npm install
-npx prisma db push
+npx prisma db push --force-reset
+npm run prisma:seed
 npm run dev
 ```
-Backend runs by default at `http://localhost:4000`. Swagger API documentation is available at `http://localhost:4000/api-docs`.
+Backend runs at `http://localhost:4000`. Swagger API documentation is available at `http://localhost:4000/api-docs`.
 
-### 3. Frontend Setup
+### 2. Frontend Setup
 ```bash
 cd ../frontend
 npm install
 npm run dev
 ```
-Frontend runs by default at `http://localhost:5173`.
+Frontend runs at `http://localhost:5173`.
 
 ---
 
-## 🖥️ Windows On-Premise Deployment
+## 🔑 Default Staff Credentials
 
-For standalone hospital host PCs running Windows:
+The database comes pre-seeded with realistic Indian clinical dummy data and default staff accounts for testing:
 
-1. **Install Dependencies & Database:** Run [`scripts/install-windows.bat`](file:///scripts/install-windows.bat) as Administrator.
-2. **Start Services:** Run [`scripts/start-hms.bat`](file:///scripts/start-hms.bat).
-3. **Stop Services:** Run [`scripts/stop-hms.bat`](file:///scripts/stop-hms.bat).
-4. **Automated Database Backup:** Run [`scripts/backup-db.bat`](file:///scripts/backup-db.bat).
-5. **Interactive Database Restore:** Run [`scripts/restore-db.bat`](file:///scripts/restore-db.bat).
+| Role | Staff Name | Email | Password |
+|---|---|---|---|
+| **System Administrator** | Dr. Alok Verma | `admin@radiant.lan` | `Radiant@123` |
+| **General Medicine Doctor** | Dr. Rajesh Sharma | `dr.sharma@radiant.lan` | `Doctor@123` |
+| **Senior Cardiologist** | Dr. Priya Nair | `dr.priya@radiant.lan` | `Doctor@123` |
+| **Orthopedic Surgeon** | Dr. Amit Verma | `dr.amit@radiant.lan` | `Doctor@123` |
+| **Consultant Pediatrician** | Dr. Sneha Reddy | `dr.sneha@radiant.lan` | `Doctor@123` |
+| **Head Nurse** | Sister Sunita Rao | `nurse.sunita@radiant.lan` | `Staff@123` |
+| **Chief Pharmacist** | Vikram Joshi | `pharmacy@radiant.lan` | `Staff@123` |
+| **Senior Lab Technologist**| Anjali Deshmukh | `lab@radiant.lan` | `Staff@123` |
+| **Frontdesk Receptionist** | Manoj Kumar | `reception@radiant.lan` | `Staff@123` |
+| **Senior Billing Officer** | Kavita Patel | `billing@radiant.lan` | `Staff@123` |
 
-Detailed LAN deployment instructions are available in [`docs/WINDOWS_LAN_DEPLOYMENT.md`](file:///docs/WINDOWS_LAN_DEPLOYMENT.md).
+> [!NOTE]
+> For ABDM OTP verification in test/sandbox mode, use test code: **`123456`**.
 
 ---
 
-## 📚 Documentation
+## 🖥️ Windows LAN Deployment
 
-- [Architecture Plan](docs/ARCHITECTURE_PLAN.md)
-- [Client Technical Specifications & Delivery Guide](docs/CLIENT_TECHNICAL_SPEC_AND_DELIVERY_GUIDE.md)
-- [Windows LAN Deployment](docs/WINDOWS_LAN_DEPLOYMENT.md)
-- [Backup and Disaster Recovery](docs/BACKUP_AND_DISASTER_RECOVERY.md)
-- [Security Checklist](docs/SECURITY_CHECKLIST.md)
-- [Release Notes](docs/RELEASE_NOTES.md)
+For hospital host PC deployment on a private local area network:
+1. Run [`scripts/install-windows.bat`](file:///scripts/install-windows.bat) as Administrator.
+2. Run [`scripts/start-hms.bat`](file:///scripts/start-hms.bat) to launch the unified server on port 4000.
+3. Access from any workstation browser on LAN: `http://<HOST-IP>:4000`.
+4. Run [`scripts/backup-db.bat`](file:///scripts/backup-db.bat) for automated database snapshots.
 
 ---
 
 ## 📄 License
-Internal proprietary license for Radiant Hospitals.
+Proprietary license for Radiant Hospital & Research Institute.

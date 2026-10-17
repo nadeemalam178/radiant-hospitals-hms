@@ -25,6 +25,13 @@ model HospitalSettings {
   appointmentPrefix  String   @default("APT")
   labOrderPrefix     String   @default("LAB")
   taxPercentDefault  Float    @default(0.0)
+  
+  // ABDM / ABHA (Ayushman Bharat Digital Mission) Configuration
+  facilityId         String?  @default("IN2910000452") // ABDM HFR / Facility ID
+  facilityName       String?  @default("Radiant Hospital & Research Institute")
+  hipId              String?  @default("IN_RHRI_BLR_01") // Health Information Provider ID
+  abdmBridgeUrl      String?  @default("https://dev.abdm.gov.in/gateway/v0.5")
+
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }
@@ -236,6 +243,14 @@ model Patient {
   allergies             String?
   mergedIntoId          String?         // In case of duplicate merge
   isArchived            Boolean         @default(false)
+
+  // ABHA / ABDM (Ayushman Bharat Digital Mission) Fields
+  abhaNumber            String?         @unique // 14-digit format: "91-1234-5678-9012"
+  abhaAddress           String?         @unique // e.g. "ananya.sharma@abdm"
+  abhaStatus            String          @default("NOT_LINKED") // NOT_LINKED, PENDING, VERIFIED
+  aadhaarMasked         String?         // e.g. "XXXX-XXXX-8921"
+  abhaDetails           Json?           // Full ABDM profile: { healthId, district, state, pincode, photoUrl, careContexts, etc. }
+
   createdAt             DateTime        @default(now())
   updatedAt             DateTime        @updatedAt
   appointments          Appointment[]
@@ -244,10 +259,28 @@ model Patient {
   invoices              Invoice[]
   labOrders             LabOrder[]
   prescriptions         Prescription[]
+  careContexts          AbhaCareContext[]
 
   @@index([mrn])
   @@index([fullName])
   @@index([phone])
+  @@index([abhaNumber])
+  @@index([abhaAddress])
+}
+
+model AbhaCareContext {
+  id              String   @id @default(cuid())
+  patientId       String
+  patient         Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  referenceNumber String   // Encounter number or Lab order number or Admission number
+  display         String   // e.g. "OPD Consultation - Dr. Rajesh Sharma"
+  careContextType String   // "OPD_VISIT", "DIAGNOSTIC_REPORT", "DISCHARGE_SUMMARY"
+  status          String   @default("LINKED") // "LINKED", "REQUESTED", "REVOKED"
+  hipId           String?  // Hospital Information Provider ID
+  linkedAt        DateTime @default(now())
+
+  @@unique([patientId, referenceNumber])
+  @@index([patientId])
 }
 
 // ----------------------------------------------------

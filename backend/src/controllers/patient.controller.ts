@@ -17,6 +17,11 @@ export const createPatientSchema = z.object({
     emergencyContactPhone: z.string().optional(),
     address: z.string().optional(),
     allergies: z.string().optional(),
+    abhaNumber: z.string().optional(),
+    abhaAddress: z.string().optional(),
+    abhaStatus: z.string().optional(),
+    aadhaarMasked: z.string().optional(),
+    abhaDetails: z.any().optional(),
   }),
 })
 
@@ -32,6 +37,11 @@ export const updatePatientSchema = z.object({
     emergencyContactPhone: z.string().optional(),
     address: z.string().optional(),
     allergies: z.string().optional(),
+    abhaNumber: z.string().optional(),
+    abhaAddress: z.string().optional(),
+    abhaStatus: z.string().optional(),
+    aadhaarMasked: z.string().optional(),
+    abhaDetails: z.any().optional(),
   }),
 })
 
@@ -82,6 +92,11 @@ export class PatientController {
           emergencyContactPhone: data.emergencyContactPhone || null,
           address: data.address || null,
           allergies: data.allergies || null,
+          abhaNumber: data.abhaNumber || null,
+          abhaAddress: data.abhaAddress || null,
+          abhaStatus: data.abhaStatus || 'NOT_LINKED',
+          aadhaarMasked: data.aadhaarMasked || null,
+          abhaDetails: data.abhaDetails || undefined,
         },
       })
 
@@ -123,6 +138,8 @@ export class PatientController {
           { mrn: { contains: search, mode: 'insensitive' } },
           { fullName: { contains: search, mode: 'insensitive' } },
           { phone: { contains: search } },
+          { abhaNumber: { contains: search, mode: 'insensitive' } },
+          { abhaAddress: { contains: search, mode: 'insensitive' } },
         ]
       }
 
@@ -142,6 +159,10 @@ export class PatientController {
             phone: true,
             email: true,
             allergies: true,
+            abhaNumber: true,
+            abhaAddress: true,
+            abhaStatus: true,
+            aadhaarMasked: true,
             createdAt: true,
             _count: {
               select: {
@@ -177,6 +198,9 @@ export class PatientController {
       const patient = await prisma.patient.findUnique({
         where: { id },
         include: {
+          careContexts: {
+            orderBy: { linkedAt: 'desc' },
+          },
           appointments: {
             orderBy: { appointmentDate: 'desc' },
             take: 10,
@@ -270,6 +294,7 @@ export class PatientController {
         await tx.admission.updateMany({ where: { patientId: sourcePatientId }, data: { patientId: targetPatientId } })
         await tx.labOrder.updateMany({ where: { patientId: sourcePatientId }, data: { patientId: targetPatientId } })
         await tx.prescription.updateMany({ where: { patientId: sourcePatientId }, data: { patientId: targetPatientId } })
+        await tx.abhaCareContext.updateMany({ where: { patientId: sourcePatientId }, data: { patientId: targetPatientId } })
 
         // Mark source as archived and merged
         await tx.patient.update({

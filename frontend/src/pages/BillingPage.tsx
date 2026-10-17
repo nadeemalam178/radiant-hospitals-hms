@@ -129,7 +129,14 @@ export const BillingPage: React.FC = () => {
       cell: (row: Invoice) => (
         <div>
           <div className="font-medium text-white">{row.patient.fullName}</div>
-          <div className="text-xs text-slate-500 font-mono">{row.patient.mrn} &bull; {row.patient.phone}</div>
+          <div className="text-xs text-slate-500 font-mono">
+            {row.patient.mrn} &bull; {row.patient.phone}
+          </div>
+          {(row.patient as any).abhaNumber && (
+            <div className="text-[10px] text-emerald-400 font-mono font-semibold">
+              ABHA: {(row.patient as any).abhaNumber}
+            </div>
+          )}
         </div>
       ),
     },
@@ -486,14 +493,26 @@ export const BillingPage: React.FC = () => {
             </div>
 
             {/* Patient Header */}
-            <div className="grid grid-cols-2 gap-4 bg-gray-50 p-3 rounded-lg border border-gray-200">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
               <div>
-                <span className="text-gray-500 block">Patient Name:</span>
+                <span className="text-gray-500 block text-[10px]">Patient Name:</span>
                 <strong className="text-gray-900">{printInvoiceData.invoice.patient.fullName}</strong>
               </div>
               <div>
-                <span className="text-gray-500 block">MRN (Medical Record No):</span>
+                <span className="text-gray-500 block text-[10px]">Hospital MRN:</span>
                 <strong className="font-mono text-gray-900">{printInvoiceData.invoice.patient.mrn}</strong>
+              </div>
+              <div>
+                <span className="text-gray-500 block text-[10px]">ABHA ID (ABDM):</span>
+                <strong className="font-mono text-emerald-700">
+                  {printInvoiceData.invoice.patient.abhaNumber || 'Not Linked'}
+                </strong>
+              </div>
+              <div>
+                <span className="text-gray-500 block text-[10px]">ABDM Facility ID:</span>
+                <strong className="font-mono text-gray-700">
+                  {printInvoiceData.hospital?.facilityId || 'IN2910000452'}
+                </strong>
               </div>
             </div>
 

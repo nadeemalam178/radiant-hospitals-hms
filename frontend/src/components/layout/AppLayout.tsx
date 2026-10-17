@@ -57,10 +57,10 @@ export const AppLayout: React.FC = () => {
             {!collapsed && (
               <div className="truncate">
                 <h1 className="font-bold text-sm text-white tracking-tight leading-none truncate">
-                  {hospital?.name || 'Radiant Hospitals'}
+                  {hospital?.name || 'Radiant Hospital'}
                 </h1>
                 <span className="text-[10px] text-cyan-400 font-semibold tracking-wider uppercase">
-                  {hospital?.code || 'HMS CORE'}
+                  {hospital?.code || 'RHRI'} &bull; ABDM CONNECTED
                 </span>
               </div>
             )}
@@ -140,12 +140,13 @@ export const AppLayout: React.FC = () => {
 
           {/* System Environment & Status Badges */}
           <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              On-Premise LAN Active
+              ABDM HFR: {hospital?.facilityId || 'IN2910000452'}
             </div>
-            <div className="hidden md:block text-xs text-slate-500 font-mono">
-              Port: 4000
+            <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+              LAN Active (Port 4000)
             </div>
           </div>
         </header>
