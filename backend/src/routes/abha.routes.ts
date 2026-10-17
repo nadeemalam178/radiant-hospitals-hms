@@ -14,6 +14,9 @@ const router = Router()
 // All routes require authenticated hospital staff
 router.use(requireAuth)
 
+// Check ABDM Gateway configuration & operational readiness
+router.get('/status', AbhaController.getStatus)
+
 // Search ABHA directory
 router.get('/search', AbhaController.searchAbha)
 

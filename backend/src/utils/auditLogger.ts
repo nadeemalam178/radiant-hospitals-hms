@@ -13,9 +13,31 @@ export interface LogAuditEventParams {
   userAgent?: string | string[]
 }
 
+const SENSITIVE_PATTERNS = ['password', 'hash', 'token', 'secret', 'otp', 'authcode', 'credential']
+
+function sanitizeDetails(details?: Record<string, unknown>): Record<string, unknown> | undefined {
+  if (!details) return undefined
+  const sanitized: Record<string, unknown> = {}
+  for (const [key, val] of Object.entries(details)) {
+    const isSensitive = SENSITIVE_PATTERNS.some(s => key.toLowerCase().includes(s))
+    if (isSensitive) {
+      sanitized[key] = '[REDACTED]'
+    } else if (key.toLowerCase() === 'aadhaar' && typeof val === 'string' && val.length === 12) {
+      sanitized[key] = `XXXX-XXXX-${val.slice(-4)}`
+    } else if (typeof val === 'object' && val !== null && !Array.isArray(val)) {
+      sanitized[key] = sanitizeDetails(val as Record<string, unknown>)
+    } else {
+      sanitized[key] = val
+    }
+  }
+  return sanitized
+}
+
 export async function logAuditEvent(params: LogAuditEventParams): Promise<void> {
   try {
     const ua = Array.isArray(params.userAgent) ? params.userAgent.join(' ') : params.userAgent
+    const cleanDetails = sanitizeDetails(params.details)
+
     await prisma.auditLog.create({
       data: {
         action: params.action,
@@ -23,7 +45,7 @@ export async function logAuditEvent(params: LogAuditEventParams): Promise<void> 
         actorEmail: params.actorEmail,
         entityName: params.entityName,
         entityId: params.entityId,
-        details: params.details as Prisma.InputJsonValue | undefined,
+        details: cleanDetails as Prisma.InputJsonValue | undefined,
         ipAddress: params.ipAddress,
         userAgent: ua,
       },

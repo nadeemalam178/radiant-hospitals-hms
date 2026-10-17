@@ -4,7 +4,13 @@ import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log('🧹 Purging existing database records...')
+  if (process.env.NODE_ENV === 'production' && process.env.FORCE_SEED_PURGE !== 'true') {
+    console.error('❌ SAFETY ABORT: Refusing to run destructive development seed script in PRODUCTION environment!')
+    console.error('For fresh production initialization, use: npm run prisma:init-hospital')
+    process.exit(1)
+  }
+
+  console.log('🧹 Purging existing development database records...')
 
   // Delete in reverse dependency order
   await prisma.auditLog.deleteMany()

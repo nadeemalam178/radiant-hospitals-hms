@@ -9,6 +9,8 @@
     "start": "node dist/server.js",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
+    "prisma:migrate": "prisma migrate deploy",
+    "prisma:init-hospital": "tsx prisma/init-hospital.ts",
     "prisma:seed": "tsx prisma/seed.ts",
     "test": "vitest run"
   },

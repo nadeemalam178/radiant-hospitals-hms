@@ -260,6 +260,7 @@ model Patient {
   labOrders             LabOrder[]
   prescriptions         Prescription[]
   careContexts          AbhaCareContext[]
+  abdmTransactions      AbdmTransaction[]
 
   @@index([mrn])
   @@index([fullName])
@@ -281,6 +282,121 @@ model AbhaCareContext {
 
   @@unique([patientId, referenceNumber])
   @@index([patientId])
+}
+
+// ----------------------------------------------------
+// 4B. ABDM / ABHA GATEWAY TRANSACTIONS & EXCHANGE
+// ----------------------------------------------------
+
+enum AbdmAuthMethod {
+  AADHAAR_OTP
+  MOBILE_OTP
+  DEMOGRAPHICS
+  DIRECT
+}
+
+enum AbdmTxnStatus {
+  PENDING
+  OTP_SENT
+  VERIFIED
+  FAILED
+  EXPIRED
+}
+
+enum AbdmConsentStatus {
+  REQUESTED
+  GRANTED
+  DENIED
+  REVOKED
+  EXPIRED
+}
+
+model AbdmTransaction {
+  id               String         @id @default(cuid())
+  txnId            String         @unique
+  requestId        String?        // Correlation UUID
+  authMethod       AbdmAuthMethod @default(MOBILE_OTP)
+  identifierMasked String         // Masked Aadhaar or Mobile (never raw secret)
+  purpose          String         @default("KYC_AND_LINK")
+  status           AbdmTxnStatus  @default(PENDING)
+  expiresAt        DateTime
+  patientId        String?
+  patient          Patient?       @relation(fields: [patientId], references: [id], onDelete: SetNull)
+  metadata         Json?          // Responded gateway metadata, auth tokens, error messages
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([txnId])
+  @@index([requestId])
+  @@index([patientId])
+  @@index([status])
+}
+
+model AbdmGatewaySession {
+  id          String   @id @default(cuid())
+  clientId    String
+  accessToken String   @db.Text
+  tokenType   String   @default("Bearer")
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([clientId])
+  @@index([expiresAt])
+}
+
+model AbdmConsent {
+  id                    String            @id @default(cuid())
+  consentId             String            @unique
+  requestId             String
+  patientAbhaAddress    String
+  hipId                 String
+  status                AbdmConsentStatus @default(REQUESTED)
+  purpose               String
+  hiTypes               String[]          // OPConsultation, DiagnosticReport, Prescription, DischargeSummary
+  careContextReferences Json              // Array of care context references
+  dateRangeFrom         DateTime?
+  dateRangeTo           DateTime?
+  expiryDate            DateTime
+  signature             String?           @db.Text
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  @@index([consentId])
+  @@index([patientAbhaAddress])
+  @@index([status])
+}
+
+model AbdmDataTransfer {
+  id               String    @id @default(cuid())
+  transactionId    String    @unique
+  consentId        String
+  hipId            String
+  hiuId            String
+  status           String    @default("INITIATED") // INITIATED, DELIVERED, FAILED
+  encryptedDataKey String?   @db.Text
+  checksum         String?
+  transferredAt    DateTime?
+  createdAt        DateTime  @default(now())
+
+  @@index([transactionId])
+  @@index([consentId])
+}
+
+model AbdmCallbackLog {
+  id         String   @id @default(cuid())
+  requestId  String
+  endpoint   String
+  direction  String   // INBOUND or OUTBOUND
+  statusCode Int?
+  payload    Json?
+  error      Json?
+  createdAt  DateTime @default(now())
+
+  @@index([requestId])
+  @@index([endpoint])
+  @@index([direction])
+  @@index([createdAt])
 }
 
 // ----------------------------------------------------

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal } from '../ui/Modal'
 import { api } from '../../services/api'
 import { AbhaProfile } from '../../types'
@@ -11,8 +11,17 @@ import {
   CheckCircle2,
   AlertCircle,
   ArrowRight,
-  RefreshCw,
+  Info,
 } from 'lucide-react'
+
+interface GatewayStatus {
+  configured: boolean
+  environment: string
+  hipId: string
+  facilityId: string
+  mockModeActive: boolean
+  statusMessage: string
+}
 
 interface AbhaVerifyModalProps {
   isOpen: boolean
@@ -36,6 +45,9 @@ export const AbhaVerifyModal: React.FC<AbhaVerifyModalProps> = ({
   const [identifier, setIdentifier] = useState(initialPhone)
   const [searchQuery, setSearchQuery] = useState('')
 
+  // Gateway Status
+  const [gatewayStatus, setGatewayStatus] = useState<GatewayStatus | null>(null)
+
   // OTP State
   const [txnId, setTxnId] = useState<string | null>(null)
   const [otp, setOtp] = useState('')
@@ -46,6 +58,15 @@ export const AbhaVerifyModal: React.FC<AbhaVerifyModalProps> = ({
   const [error, setError] = useState<string | null>(null)
   const [verifiedProfile, setVerifiedProfile] = useState<AbhaProfile | null>(null)
 
+  useEffect(() => {
+    if (isOpen) {
+      api
+        .get('/abha/status')
+        .then(res => setGatewayStatus(res.data.data))
+        .catch(() => setGatewayStatus(null))
+    }
+  }, [isOpen])
+
   const handleGenerateOtp = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
@@ -55,12 +76,16 @@ export const AbhaVerifyModal: React.FC<AbhaVerifyModalProps> = ({
       const res = await api.post('/abha/generate-otp', {
         authMethod,
         value: identifier,
+        patientId: patientIdToLink,
       })
       setTxnId(res.data.data.txnId)
       setOtpMessage(res.data.data.message)
       setOtp('')
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to generate OTP via ABDM Gateway.')
+      setError(
+        err.response?.data?.message ||
+          'Failed to communicate with ABDM Gateway. Please check server configuration.'
+      )
     } finally {
       setLoading(false)
     }
@@ -79,23 +104,13 @@ export const AbhaVerifyModal: React.FC<AbhaVerifyModalProps> = ({
         patientDetails: {
           fullName: initialName || undefined,
         },
+        patientIdToLink,
       })
 
       const profile: AbhaProfile = res.data.data
       setVerifiedProfile(profile)
-
-      // If linking to an existing patient, immediately call backend link
-      if (patientIdToLink) {
-        await api.post('/abha/link', {
-          patientId: patientIdToLink,
-          abhaNumber: profile.abhaNumber,
-          abhaAddress: profile.abhaAddress,
-          aadhaarMasked: profile.aadhaarMasked,
-          abhaDetails: profile,
-        })
-      }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to verify OTP.')
+      setError(err.response?.data?.message || 'Failed to verify OTP with ABDM Gateway.')
     } finally {
       setLoading(false)
     }
@@ -114,7 +129,7 @@ export const AbhaVerifyModal: React.FC<AbhaVerifyModalProps> = ({
       const profile: AbhaProfile = res.data.data
       setVerifiedProfile(profile)
 
-      if (patientIdToLink) {
+      if (patientIdToLink && res.data.foundIn === 'LOCAL_REGISTRY') {
         await api.post('/abha/link', {
           patientId: patientIdToLink,
           abhaNumber: profile.abhaNumber,
@@ -145,6 +160,8 @@ export const AbhaVerifyModal: React.FC<AbhaVerifyModalProps> = ({
     setError(null)
   }
 
+  const isLiveReady = Boolean(gatewayStatus?.configured || gatewayStatus?.mockModeActive)
+
   return (
     <Modal
       isOpen={isOpen}
@@ -152,14 +169,48 @@ export const AbhaVerifyModal: React.FC<AbhaVerifyModalProps> = ({
       title="Ayushman Bharat Digital Mission (ABDM) Integration"
       maxWidth="xl"
     >
-      <div className="space-y-5">
-        {/* Subtitle */}
-        <div className="flex items-center gap-2 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300">
-          <ShieldCheck size={18} className="text-emerald-400 flex-shrink-0" />
-          <span>
-            Connect, authenticate, and issue official 14-digit ABHA IDs via the National Health Authority (NHA) Gateway.
-          </span>
+      <div className="space-y-4">
+        {/* Gateway Status Header */}
+        <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
+          <div className="flex items-center gap-2">
+            <ShieldCheck size={18} className="text-emerald-400 flex-shrink-0" />
+            <div>
+              <span className="font-semibold text-white">Facility: </span>
+              <span className="text-slate-300">Radiant Hospital &amp; Research Institute</span>
+              <span className="text-slate-500 font-mono ml-2">({gatewayStatus?.facilityId || 'IN2910000452'})</span>
+            </div>
+          </div>
+          <div>
+            {gatewayStatus?.mockModeActive ? (
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                TEST MOCK HARNESS
+              </span>
+            ) : gatewayStatus?.configured ? (
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                GATEWAY CONNECTED ({gatewayStatus.environment.toUpperCase()})
+              </span>
+            ) : (
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                PENDING CREDENTIALS
+              </span>
+            )}
+          </div>
         </div>
+
+        {/* Informative notice if gateway is unconfigured in production */}
+        {!isLiveReady && (
+          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 flex items-start gap-2">
+            <Info size={16} className="text-amber-400 flex-shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <span className="font-semibold block">Official ABDM Gateway Credentials Pending</span>
+              <p className="text-[11px] text-amber-200/80 leading-relaxed">
+                Live OTP generation &amp; verification will be operational once official National Health Authority (NHA)
+                Sandbox or Production credentials (<code className="font-mono text-amber-200">ABDM_CLIENT_ID</code>) are
+                configured in the server environment. Local hospital patient ABHA searching remains active.
+              </p>
+            </div>
+          </div>
+        )}
 
         {error && (
           <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300 flex items-center gap-2">
@@ -194,12 +245,12 @@ export const AbhaVerifyModal: React.FC<AbhaVerifyModalProps> = ({
                 <span className="font-mono font-semibold text-cyan-300">{verifiedProfile.abhaAddress}</span>
               </div>
               <div>
-                <span className="text-[10px] text-slate-400 uppercase tracking-wider block">Gender & DOB</span>
+                <span className="text-[10px] text-slate-400 uppercase tracking-wider block">Gender &amp; DOB</span>
                 <span className="text-slate-300">{verifiedProfile.gender} &bull; {verifiedProfile.dateOfBirth}</span>
               </div>
               <div>
                 <span className="text-[10px] text-slate-400 uppercase tracking-wider block">Aadhaar (Masked)</span>
-                <span className="font-mono text-slate-300">{verifiedProfile.aadhaarMasked || 'XXXX-XXXX-9912'}</span>
+                <span className="font-mono text-slate-300">{verifiedProfile.aadhaarMasked || 'Not Provided'}</span>
               </div>
             </div>
 
@@ -299,10 +350,14 @@ export const AbhaVerifyModal: React.FC<AbhaVerifyModalProps> = ({
 
                     <button
                       type="submit"
-                      disabled={loading || !identifier}
-                      className="w-full py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/20 transition disabled:opacity-50"
+                      disabled={loading || !identifier || !isLiveReady}
+                      className="w-full py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/20 transition disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
                     >
-                      {loading ? 'Requesting Gateway OTP...' : 'Send ABDM Verification OTP'}
+                      {loading
+                        ? 'Requesting Gateway OTP...'
+                        : !isLiveReady
+                        ? 'ABDM Gateway Credentials Required'
+                        : 'Send ABDM Verification OTP'}
                     </button>
                   </form>
                 ) : (
@@ -323,12 +378,14 @@ export const AbhaVerifyModal: React.FC<AbhaVerifyModalProps> = ({
                         maxLength={6}
                         value={otp}
                         onChange={e => setOtp(e.target.value)}
-                        placeholder="123456"
+                        placeholder="••••••"
                         className="w-full px-3.5 py-2.5 bg-[#090f1d] border border-slate-700/80 rounded-xl text-white text-sm font-mono tracking-widest text-center focus:border-emerald-500 focus:outline-none"
                       />
-                      <span className="text-[10px] text-slate-500 block mt-1">
-                        💡 Test OTP Code: <strong className="text-emerald-400">123456</strong>
-                      </span>
+                      {gatewayStatus?.mockModeActive && (
+                        <span className="text-[10px] text-amber-400 block mt-1">
+                          ⚡ Test Harness Challenge OTP: <strong>654321</strong>
+                        </span>
+                      )}
                     </div>
 
                     <div className="flex gap-2">
@@ -344,7 +401,7 @@ export const AbhaVerifyModal: React.FC<AbhaVerifyModalProps> = ({
                         disabled={loading || otp.length < 6}
                         className="flex-1 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/20 transition disabled:opacity-50"
                       >
-                        {loading ? 'Authenticating...' : 'Verify OTP & Issue ABHA'}
+                        {loading ? 'Authenticating...' : 'Verify OTP with ABDM'}
                       </button>
                     </div>
                   </form>
@@ -374,7 +431,7 @@ export const AbhaVerifyModal: React.FC<AbhaVerifyModalProps> = ({
                   disabled={loading || !searchQuery.trim()}
                   className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/20 transition disabled:opacity-50"
                 >
-                  {loading ? 'Searching ABDM Registry...' : 'Search ABDM Registry'}
+                  {loading ? 'Searching Registry...' : 'Search Patient Registry'}
                 </button>
               </form>
             )}

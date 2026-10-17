@@ -18,6 +18,7 @@ import { labRoutes } from './routes/lab.routes'
 import { pharmacyRoutes } from './routes/pharmacy.routes'
 import { reportRoutes } from './routes/report.routes'
 import { abhaRoutes } from './routes/abha.routes'
+import { abdmGatewayRoutes } from './routes/abdm-gateway.routes'
 import { prisma } from './config/db'
 
 export const app = express()
@@ -86,6 +87,8 @@ app.use('/api/v1/lab', labRoutes)
 app.use('/api/v1/pharmacy', pharmacyRoutes)
 app.use('/api/v1/reports', reportRoutes)
 app.use('/api/v1/abha', abhaRoutes)
+app.use('/api/v1/abdm/gateway', abdmGatewayRoutes)
+app.use('/', abdmGatewayRoutes) // Supports direct /v0.5/... gateway callbacks
 
 // Serve Production Frontend SPA directly from Express on LAN
 const frontendDistPath = path.resolve(__dirname, '../../frontend/dist')

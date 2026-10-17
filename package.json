@@ -14,6 +14,7 @@
     "prisma:generate": "cd backend && npm run prisma:generate",
     "prisma:push": "cd backend && npm run prisma:push",
     "prisma:migrate": "cd backend && npx prisma migrate deploy",
+    "prisma:init-hospital": "cd backend && npm run prisma:init-hospital",
     "prisma:seed": "cd backend && npm run prisma:seed"
   },
   "keywords": [
